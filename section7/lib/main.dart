@@ -40,6 +40,20 @@ class MyApp extends StatelessWidget {
         CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
         MealDetaiScreen.routeName: (ctx) => MealDetaiScreen(),
       },
+      // tạo ra đường dẫn đến trang khi không tồn tại route chỉ định
+      onGenerateRoute: (settings) {
+        // print(settings.arguments);
+        // if(settings.name == '/meal-detail'){
+        //   return ...;
+        // }
+        // else if() {
+
+        // }
+        // return MaterialPageRoute(builder: (ctx) => const CategoriesScreen());
+      },
+      onUnknownRoute: (settings) {
+        return MaterialPageRoute(builder: (ctx) => const CategoriesScreen());
+      },
     );
   }
 }
