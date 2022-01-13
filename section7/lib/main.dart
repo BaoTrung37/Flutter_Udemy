@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/tabs_screen.dart';
 import 'screens/category_meals_screen.dart' show CategoryMealsScreen;
 import 'screens/meal_detail_screen.dart';
 import 'screens/categories_screen.dart';
@@ -36,21 +37,21 @@ class MyApp extends StatelessWidget {
       // home: const CategoriesScreen(),
       initialRoute: '/', // default is '/'
       routes: {
-        '/': (ctx) => const CategoriesScreen(),
+        '/': (ctx) => const TabsScreen(),
         CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
         MealDetaiScreen.routeName: (ctx) => MealDetaiScreen(),
       },
       // tạo ra đường dẫn đến trang khi không tồn tại route chỉ định
-      onGenerateRoute: (settings) {
-        // print(settings.arguments);
-        // if(settings.name == '/meal-detail'){
-        //   return ...;
-        // }
-        // else if() {
+      // onGenerateRoute: (settings) {
+      // print(settings.arguments);
+      // if(settings.name == '/meal-detail'){
+      //   return ...;
+      // }
+      // else if() {
 
-        // }
-        // return MaterialPageRoute(builder: (ctx) => const CategoriesScreen());
-      },
+      // }
+      // return MaterialPageRoute(builder: (ctx) => const CategoriesScreen());
+      // },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(builder: (ctx) => const CategoriesScreen());
       },
