@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/filters_screen.dart';
 import 'screens/tabs_screen.dart';
 import 'screens/category_meals_screen.dart' show CategoryMealsScreen;
 import 'screens/meal_detail_screen.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/': (ctx) => const TabsScreen(),
         CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
         MealDetaiScreen.routeName: (ctx) => MealDetaiScreen(),
+        FiltersScreen.routerName: (ctx) => FiltersScreen(),
       },
       // tạo ra đường dẫn đến trang khi không tồn tại route chỉ định
       // onGenerateRoute: (settings) {
