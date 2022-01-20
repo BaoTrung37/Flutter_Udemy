@@ -12,6 +12,8 @@ class UserProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ! lỗi chỗ này
+    final String id = "_";
     final productData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
@@ -22,7 +24,9 @@ class UserProductsScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               //TODO: implement logout
-              Navigator.of(context).pushNamed(EditProductScreen.routeName);
+              // ! lỗi chỗ này
+              Navigator.of(context)
+                  .pushNamed(EditProductScreen.routeName, arguments: id);
             },
             icon: const Icon(Icons.add),
           ),

@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
+        ChangeNotifierProvider(
+          create: (ctx) => Orders(),
+        ),
         // ChangeNotifierProvider.value(
         //   value: Products(),
         // ),
