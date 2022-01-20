@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  final List<Product> _items = [
+  late List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -48,8 +48,33 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
+  Future<void> fetchAndSetProducts() async {
+    final url = Uri.parse(
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json");
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> loadedProducts = [];
+      extractedData.forEach((proId, proData) {
+        loadedProducts.add(Product(
+          id: proId,
+          title: proData['title'],
+          description: proData['description'],
+          price: proData['price'],
+          imageUrl: proData['imageUrl'],
+          isFavorite: proData['isFavorite'],
+        ));
+      });
+      _items = loadedProducts;
+      notifyListeners();
+      // print(json.decode(response.body));
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   Future<void> addProduct(Product product) async {
-    var url = Uri.parse(
+    final url = Uri.parse(
         "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json");
     try {
       final response = await http.post(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
+import '../providers/products.dart';
 import '../widgets/app_drawer.dart';
-import 'cart_screen.dart';
+import './cart_screen.dart';
 import '../providers/cart.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
@@ -21,6 +23,39 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var showOnlyFavorites = false;
+  bool _isInit = true;
+  bool _isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    /* * Không thể gọi Provider.of<Products>(context) trong initState
+       Bởi vì bạn đang cố gắng lắng nghe một vòng đời mà sẽ không được gọi lại
+    */
+    // Future.delayed(Duration.zero).then((_) {
+    //   Provider.of<Products>(context).fetchAndSetProducts();
+    // });
+    // Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final cart = Provider.of<Cart>(context);
@@ -68,9 +103,13 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(
-        showFavorites: showOnlyFavorites,
-      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(
+              showFavorites: showOnlyFavorites,
+            ),
     );
   }
 }
