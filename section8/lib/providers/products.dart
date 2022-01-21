@@ -60,7 +60,7 @@ class Products with ChangeNotifier {
           id: proId,
           title: proData['title'],
           description: proData['description'],
-          price: proData['price'],
+          price: double.parse(proData['price'].toString()),
           imageUrl: proData['imageUrl'],
           isFavorite: proData['isFavorite'],
         ));
@@ -68,8 +68,11 @@ class Products with ChangeNotifier {
       _items = loadedProducts;
       notifyListeners();
       // print(json.decode(response.body));
-    } catch (error) {
-      rethrow;
+    } on Exception catch (exception) {
+      print(exception);
+      throw Exception(exception);
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -99,15 +102,26 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
       notifyListeners();
       // return Future.value();
-    } catch (error) {
-      print(error);
-      rethrow;
+    } on Exception catch (exception) {
+      throw Exception(exception);
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url = Uri.parse(
+          "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json");
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+            'favorite': newProduct.isFavorite,
+          }));
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else
