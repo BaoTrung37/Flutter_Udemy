@@ -1,7 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'product.dart';
+
+import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   late List<Product> _items = [
@@ -128,9 +131,31 @@ class Products with ChangeNotifier {
       print('...');
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.parse(
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json");
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    Product? existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    try {
+      final response = await http.delete(url);
+      if (response.statusCode >= 400) {
+        _items.insert(existingProductIndex, existingProduct);
+        notifyListeners();
+        throw HttpException(message: 'Could not delete product.');
+      }
+    } catch (e) {
+      print(e);
+    }
+    // final response = await http.delete(url);
+    // if (response.statusCode >= 400) {
+    //   _items.insert(existingProductIndex, existingProduct);
+    //   notifyListeners();
+    //   throw HttpException(message: 'Could not delete product.');
+    // }
+    // ? Điều này thực sự cần thiết khi sử dụng Future.
+    existingProduct = null;
   }
 
   Product findById(String id) {
