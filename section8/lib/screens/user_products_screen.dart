@@ -19,6 +19,7 @@ class UserProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // ! lỗi chỗ này
     final String id = "_";
+    print('building orders');
     final productData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
