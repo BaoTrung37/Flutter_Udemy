@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'product.dart';
+
+import 'package:section8/providers/auth.dart';
 
 import '../models/http_exception.dart';
+import 'product.dart';
 
 class Products with ChangeNotifier {
   late List<Product> _items = [
@@ -41,6 +43,14 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+
+  final String? authToken;
+
+  Products(
+    this.authToken,
+    this._items,
+  );
+
   var showFavoriteOnly = false;
 
   List<Product> get favoriteItems {
@@ -53,7 +63,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
-        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json");
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -84,7 +94,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json");
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.post(
         url,
@@ -119,7 +129,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url = Uri.parse(
-          "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json");
+          "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -136,7 +146,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url = Uri.parse(
-        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json");
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
