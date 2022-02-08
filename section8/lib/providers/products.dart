@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_escapes
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -62,16 +64,18 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAndSetProducts() async {
+  // * Note filter with http
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    var filterString =
+        filterByUser ? 'orderBy=\"creatorId\"&equalTo=\"$userId\"' : '';
     final url = Uri.parse(
-        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json?auth=$authToken");
+        "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString");
     try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final favoriteResponse = await http.get(Uri.parse(
           "https://flutter-app-82f7b-default-rtdb.firebaseio.com/userPavorites/$userId.json?auth=$authToken"));
       final favoriteData = json.decode(favoriteResponse.body);
-
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
@@ -110,6 +114,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
+            'creatorId': userId,
             // 'isFavorite': product.isFavorite,
           },
         ),
