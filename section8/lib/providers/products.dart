@@ -67,7 +67,7 @@ class Products with ChangeNotifier {
   // * Note filter with http
   Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
     var filterString =
-        filterByUser ? 'orderBy=\"creatorId\"&equalTo=\"$userId\"' : '';
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     final url = Uri.parse(
         "https://flutter-app-82f7b-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString");
     try {
