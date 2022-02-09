@@ -6,15 +6,8 @@ import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-
   const ProductItem({
     Key? key,
-    // required this.id,
-    // required this.title,
-    // required this.imageUrl,
   }) : super(key: key);
 
   @override
@@ -34,8 +27,9 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.network(
-            product.imageUrl,
+          child: FadeInImage(
+            placeholder: AssetImage("assets/images/product-placeholder.png"),
+            image: NetworkImage(product.imageUrl),
             fit: BoxFit.cover,
           ),
         ),
