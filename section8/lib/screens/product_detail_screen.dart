@@ -52,6 +52,7 @@ class ProductDetailScreen extends StatelessWidget {
                   color: Colors.grey,
                   fontSize: 20,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 10,
