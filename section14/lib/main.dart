@@ -19,7 +19,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Chats',
       theme: ThemeData(
-        primaryColor: Colors.blue,
+        primaryColor: Colors.pink,
+        backgroundColor: Colors.pink,
+        accentColor: Colors.deepPurple,
+        accentColorBrightness: Brightness.dark,
+        buttonTheme: ButtonTheme.of(context).copyWith(
+          buttonColor: Colors.pink,
+          textTheme: ButtonTextTheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
       ),
       home: AuthScreen(),
     );
