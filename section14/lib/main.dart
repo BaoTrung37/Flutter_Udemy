@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:section14/screens/chat_screen.dart';
 
 import './screens/auth_screen.dart';
 
@@ -30,7 +32,17 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: AuthScreen(),
+      home: StreamBuilder<User?>(
+          // * FirebaseAuth.instance.onAuthStateChaged is deprecated
+          // * Using FirebaseAuth.instance.authStateChanges() instead
+          // * Also have to specific class User? after StreamBuilder widge if null-safty is turn on.
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, userSnapshot) {
+            if (userSnapshot.hasData) {
+              return ChatScreen();
+            }
+            return AuthScreen();
+          }),
     );
   }
 }
