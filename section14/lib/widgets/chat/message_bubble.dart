@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   final String message;
+  final String username;
   final bool isMe;
   const MessageBubble({
     Key? key,
     required this.message,
+    required this.username,
     required this.isMe,
   }) : super(key: key);
 
@@ -27,13 +30,47 @@ class MessageBubble extends StatelessWidget {
           width: 140,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(
-            message,
-            style: TextStyle(
-              color: isMe
-                  ? Colors.black
-                  : Theme.of(context).accentTextTheme.headline1!.color,
-            ),
+          child: Column(
+            crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              // FutureBuilder(
+              //     future: FirebaseFirestore.instance
+              //         .collection('users')
+              //         .doc(username)
+              //         .get(),
+              //     // * Solve 1
+              //     // builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              //     // * Solve 2
+              //     builder: (context, snapshot) {
+              //       if (snapshot.connectionState == ConnectionState.waiting) {
+              //         return Text('loading..');
+              //       }
+              Text(
+                // * Solve 1
+                // snapshot.data!['username'],
+
+                // * Solve 2
+                // (snapshot.data as dynamic)['username'],
+                username,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isMe
+                      ? Colors.black
+                      : Theme.of(context).accentTextTheme.headline1!.color,
+                ),
+              ),
+
+              Text(
+                message,
+                style: TextStyle(
+                  color: isMe
+                      ? Colors.black
+                      : Theme.of(context).accentTextTheme.headline1!.color,
+                ),
+                textAlign: isMe ? TextAlign.end : TextAlign.start,
+              ),
+            ],
           ),
         ),
       ],
