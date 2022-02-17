@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import './message_bubble.dart';
+
 class Messages extends StatelessWidget {
   const Messages({Key? key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class Messages extends StatelessWidget {
             reverse: true,
             itemCount: chatDos.length,
             itemBuilder: (ctx, i) =>
-                Text((chatDos[i].data() as dynamic)['text']),
+                MessageBubble(message: (chatDos[i].data() as dynamic)['text']),
           );
         });
   }
