@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import './message_bubble.dart';
 
 class Messages extends StatelessWidget {
@@ -10,23 +10,28 @@ class Messages extends StatelessWidget {
   Widget build(BuildContext context) {
     // * using QuerySnapShot
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('chat')
-            .orderBy('createAt', descending: true)
-            .snapshots(),
-        builder: (context, chatSnapshot) {
-          if (chatSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final chatDos = chatSnapshot.data!.docs;
-          return ListView.builder(
-            reverse: true,
-            itemCount: chatDos.length,
-            itemBuilder: (ctx, i) =>
-                MessageBubble(message: (chatDos[i].data() as dynamic)['text']),
+      stream: FirebaseFirestore.instance
+          .collection('chat')
+          .orderBy('createAt', descending: true)
+          .snapshots(),
+      builder: (context, chatSnapshot) {
+        if (chatSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        });
+        }
+        final chatDos = chatSnapshot.data!.docs;
+        return ListView.builder(
+          reverse: true,
+          itemCount: chatDos.length,
+          itemBuilder: (ctx, i) => MessageBubble(
+            message: (chatDos[i].data() as dynamic)['text'],
+            isMe: FirebaseAuth.instance.currentUser!.uid ==
+                (chatDos[i].data() as dynamic)['userId'],
+            key: ValueKey(chatDos[i].id),
+          ),
+        );
+      },
+    );
   }
 }
