@@ -6,8 +6,14 @@ import '../pickers/user_image_picker.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isLoading;
-  final Future<void> Function(String email, String password, String username,
-      bool isLogin, BuildContext ctx) submitFn;
+  final Future<void> Function(
+    String email,
+    String password,
+    String username,
+    File image,
+    bool isLogin,
+    BuildContext ctx,
+  ) submitFn;
 
   const AuthForm(this.submitFn, this.isLoading, {Key? key}) : super(key: key);
 
@@ -23,7 +29,6 @@ class _AuthFormState extends State<AuthForm> {
   String _userPassword = '';
   File? _userImageFile;
 
-  
   void _pickedImage(File image) {
     _userImageFile = image;
   }
@@ -46,6 +51,7 @@ class _AuthFormState extends State<AuthForm> {
         _userEmail.trim(),
         _userPassword.trim(),
         _userName.trim(),
+        _userImageFile!,
         _isLogin,
         context,
       );
